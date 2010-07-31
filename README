@@ -1,0 +1,5 @@
+Canvas-powered click activity heatmap. Based on xxx's heatmap at http://github.com/xxx/heatmap
+
+Frontend is a jQuery plugin. Attach it to a container and bam, click tracking on that container.
+
+Backend is Node.js and mongodb. Very fast, not too hard to deploy. Depends on node.js, mongodb, and the express and mongodb-native node packages.

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns='http://www.w3.org/1999/xhtml'>
+	<head>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
+		<script type="text/javascript" src="heatmap.js"></script>
+		<style>
+			body { margin: 0; padding: 0; font-family: sans-serif; }
+			#admin_controls {
+				margin: 0; padding: 0;
+				list-style: none;
+				position: absolute;
+				left: 20px;
+				bottom: 0; }
+				#admin_controls li a {
+					display: inline-block;
+					background: white;
+					border: 1px solid #236af9;
+					-moz-border-radius: 5px 5px 0 0;
+					-webkit-border-top-left-radius: 5px;
+					-webkit-border-bottom-left-radius: 0;
+					-webkit-border-top-right-radius: 5px;
+					-webkit-border-bottom-right-radius: 0;
+					-khtml-border-top-left-radius: 5px;
+					-khtml-border-bottom-left-radius: 0;
+					-khtml-border-top-right-radius: 5px;
+					-khtml-border-bottom-right-radius: 0;
+					border-radius: 5px 5px 0 0;
+					padding: 10px 20px;
+					font-size: 10px;
+					border-bottom: 0; }			
+			#padder { height: 400px; width: 600px; border: 1px solid #236af9; margin: 20px auto; padding: 20px; position: relative}
+			input {
+				padding: 10px 20px;
+				font-weight: bold;
+			}
+			a {
+				text-decoration: none;
+				color: #236af9;
+			}
+			a:hover {
+				text-decoration: underline;
+			}
+			#desc { width: 600px; margin: 20px auto; }
+		</style>
+		<script>
+			$(document).ready(function() {
+				$("#padder").clickhax({ trigger: "#showHeatmap", endpoint: "/map" })
+			});
+		</script>
+	</head>
+	<body>
+		<div id="padder">
+			<input type="button" value="Click here!" />
+			<input type="button" value="Don't click here! >:[" />
+			<ul>
+				<li><a href="#?1">Hot chicks</a></li>
+				<li><a href="#?2">Quarterly expense reports</a></li>
+			</ul>
+			<ul id='admin_controls'>
+				<li>
+					<a href='#' id='showHeatmap'>Show Heatmap</a>
+				</li>
+			</ul>
+		</div>
+		<div id="desc">
+			<p>Requires a HTML5-compatible browser with canvas support.</p>
+			<p><a href="http://github.com/cheald/clickhax">Check out the source at GitHib</a></p>
+		</div>
+	</body>
+</html>
