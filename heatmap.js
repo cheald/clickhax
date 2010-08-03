@@ -51,7 +51,8 @@
 		}		 
 	*/
 	
-  var clickMask = [2, 7, 18, 34, 47, 40, 23, 10, 3, 5, 20, 63, 123, 157, 143, 90, 37, 10, 11, 53, 146, 212, 230, 224, 184, 91, 25, 18, 86, 198, 238, 241, 240, 224, 145, 41, 22, 97, 208, 239, 241, 241, 231, 158, 46, 18, 86, 198, 238, 241, 240, 224, 145, 41, 11, 53, 146, 212, 230, 224, 184, 91, 25, 5, 20, 63, 123, 157, 143, 90, 37, 10, 2, 7, 18, 34, 47, 40, 23, 10, 3];
+  // var clickMask = [2, 7, 18, 34, 47, 40, 23, 10, 3, 5, 20, 63, 123, 157, 143, 90, 37, 10, 11, 53, 146, 212, 230, 224, 184, 91, 25, 18, 86, 198, 238, 241, 240, 224, 145, 41, 22, 97, 208, 239, 241, 241, 231, 158, 46, 18, 86, 198, 238, 241, 240, 224, 145, 41, 11, 53, 146, 212, 230, 224, 184, 91, 25, 5, 20, 63, 123, 157, 143, 90, 37, 10, 2, 7, 18, 34, 47, 40, 23, 10, 3];
+	var clickMask = [0, 0, 1, 4, 8, 10, 13, 14, 14, 11, 9, 5, 2, 1, 0, 0, 1, 6, 11, 20, 27, 34, 38, 36, 30, 22, 13, 7, 3, 1, 1, 6, 13, 26, 43, 60, 73, 79, 76, 64, 47, 30, 17, 8, 2, 4, 12, 26, 50, 79, 107, 129, 136, 130, 112, 86, 57, 32, 15, 6, 8, 21, 45, 81, 123, 160, 185, 195, 188, 168, 132, 90, 53, 26, 10, 12, 31, 65, 112, 164, 204, 225, 231, 229, 212, 175, 125, 76, 38, 15, 16, 41, 81, 138, 193, 229, 238, 240, 240, 233, 204, 151, 94, 48, 20, 18, 44, 90, 151, 206, 236, 240, 241, 241, 240, 216, 164, 103, 53, 23, 17, 43, 89, 148, 204, 235, 240, 241, 241, 239, 215, 162, 101, 53, 22, 14, 37, 77, 131, 187, 225, 238, 240, 239, 230, 198, 146, 89, 45, 18, 11, 28, 60, 104, 154, 195, 217, 224, 220, 202, 164, 116, 69, 34, 13, 7, 19, 41, 73, 112, 146, 170, 180, 174, 153, 120, 81, 46, 23, 9, 3, 10, 23, 43, 69, 94, 112, 121, 115, 98, 75, 48, 27, 12, 5, 1, 5, 11, 22, 36, 50, 61, 67, 63, 53, 39, 25, 13, 6, 2, 0, 1, 5, 9, 15, 23, 27, 30, 28, 24, 17, 10, 6, 2, 0]
 	var clickWidth = Math.sqrt(clickMask.length);
 	
   applyMask = function (heat) {
@@ -72,9 +73,9 @@
 				for (j = initialJ; j <= y + maskSeg; j += 1) {
 					if (j < 0 || j >= canvasHeight) { continue; }
 					key = i * 3000 + j;
-					newheat[key] = newheat[key] || (heat[key] && heat[key]) || 0;
 					var idx = ((j - initialJ) + (i - initialI) * clickWidth);
-					newheat[key] += Math.floor(clickMask[idx]);
+					newheat[key] = newheat[key] || heat[key] || 0;
+					newheat[key] += clickMask[idx];
 				}
 			}
 		}
@@ -126,7 +127,7 @@
    */
   toHue = function (value) {
     if (cache.toHue[value]) { return cache.toHue[value]; }
-    cache.toHue[value] = 240 - Math.floor((value * 240) / 255);
+    cache.toHue[value] = 255 - Math.floor(value);
     return cache.toHue[value];
   };
 
@@ -216,6 +217,22 @@
 			canvas = $('#heatmapOverlay');
 			canvas.click(function() { canvas.fadeOut('fast'); });
 			if(!context) { context = canvas.get(0).getContext('2d'); }
+			
+			/*
+			var img = new Image();
+			var dim = 15;		// Width of the image
+			img.src = "hm.png";
+			img.onload = function() {
+				var pa = [];
+				context.drawImage(img, 0, 0, dim, dim, 0, 0, dim, dim);
+				var data = context.getImageData(0, 0, dim, dim)
+				for(i=0; i<data.width*data.width;i++) {
+					pa[pa.length] = data.data[i*4];
+				}
+				console.log(data);
+				console.log(pa);
+			}	
+			*/			
 		}
 	
 		var options = $.extend({}, defaults, settings);
