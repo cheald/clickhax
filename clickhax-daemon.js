@@ -34,9 +34,9 @@ db_handle.open(function(err, db) {
 								var doc = docs[idx]								
 								var x = doc.x //- (doc.x % 5)
 								var y = doc.y //- (doc.y % 5)
-								var key = (x * 3000) + y;
+								var key = (y * 3000) + x;
 								pointResponse[key] = pointResponse[key] || 0
-								pointResponse[key] += 1
+								pointResponse[key] += doc.count
 							}
 							res.send(pointResponse);
 						})

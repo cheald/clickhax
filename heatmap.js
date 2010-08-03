@@ -61,8 +61,8 @@
 
     maskSeg = Math.floor(clickWidth / 2);
 		for (key in heat) {
-			var x = Math.floor(key / 3000);
-			var y = key % 3000;
+			var y = Math.floor(key / 3000);
+			var x = key % 3000;
 
 			initialI = x - maskSeg;
 			initialJ = y - maskSeg;
@@ -72,7 +72,7 @@
 
 				for (j = initialJ; j <= y + maskSeg; j += 1) {
 					if (j < 0 || j >= canvasHeight) { continue; }
-					key = i * 3000 + j;
+					key = j * 3000 + i;
 					var idx = ((j - initialJ) + (i - initialI) * clickWidth);
 					newheat[key] = newheat[key] || heat[key] || 0;
 					newheat[key] += clickMask[idx];
@@ -107,8 +107,8 @@
     $.each(heat, function (key, value) {
 			if(value != 0) {
 				key = parseInt(key);
-				y = key % 3000;
-				x = Math.floor(key / 3000);
+				x = key % 3000;
+				y = Math.floor(key / 3000);
 
 				rgb = hueToRGB(toHue(value), 1, 1);
 
@@ -258,7 +258,7 @@
 					});
 
 					canvasWidth = canvas.width();
-					canvasHeight = canvas.width();
+					canvasHeight = canvas.height();
 
 					$.getJSON(options.endpoint, function(data) { renderHeat(data); });
 					return false;
