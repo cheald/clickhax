@@ -2,6 +2,8 @@ var connect = require("connect");
 var app = require('express').createServer();
 var Db = require('mongodb/db').Db, ObjectID = require('mongodb/bson/bson').ObjectID, Server = require('mongodb/connection').Server;
 		
+var APP_PORT = 3000
+
 var host = "localhost"
 var port = 27017
 var database = "clickhax"
@@ -32,8 +34,8 @@ db_handle.open(function(err, db) {
 						cursor.toArray(function(err, docs) {
 							for(idx in docs) {
 								var doc = docs[idx]								
-								var x = doc.x //- (doc.x % 5)
-								var y = doc.y //- (doc.y % 5)
+								var x = doc.x
+								var y = doc.y
 								var key = (y * 3000) + x;
 								pointResponse[key] = pointResponse[key] || 0
 								pointResponse[key] += doc.count
@@ -51,33 +53,23 @@ db_handle.open(function(err, db) {
 			var url = parseUrl(req.header("referer", ""))
 			if(url.path) {
 			
-				// Quantitize to 3-px squares
+				// Quantitize to 5-px squares
 				var x = parseInt(req.param("x"));
 				var y = parseInt(req.param("y"));
 				x = x - (x % 5);
 				y = y - (y % 5);				
 				
-				coll.update({
-					x: x,
-					y: y,
-					raw_url: req.header("referer", "")
-				}, {
-					$set: {
-						path: url.path,
-						url: url.url,
-						query: url.query,
-					},
-					$inc: {count: 1}
-				}, {
-					upsert: true
-				}, function(err, docs) {
-				});
+				coll.update(
+					{ x: x, y: y, raw_url: req.header("referer", "") }, {
+						$set: { path: url.path, url: url.url, query: url.query, },
+						$inc: { count: 1 }
+					}, { upsert: true }, function(err, docs) {});
 				res.send('ok');
 			} else {
 				res.send('fail');
 			}
 		});
 
-		app.listen(3000);
+		app.listen(APP_PORT);
 	})
 });

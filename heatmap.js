@@ -26,8 +26,7 @@
 ******************************************/
  
 (function ($) {
-  var heat = {},
-      canvasWidth,
+  var canvasWidth,
       canvasHeight,
       context,
 			canvas,
@@ -35,7 +34,6 @@
       renderHeat,
       toHue,
       hueToRGB,
-      renderStartTime,
 			normalizeHeat;
 			
 	/* Effectively a grayscale 9x9 image to be used to paint both opacity and heat
@@ -52,10 +50,10 @@
 	*/
 	
   // var clickMask = [2, 7, 18, 34, 47, 40, 23, 10, 3, 5, 20, 63, 123, 157, 143, 90, 37, 10, 11, 53, 146, 212, 230, 224, 184, 91, 25, 18, 86, 198, 238, 241, 240, 224, 145, 41, 22, 97, 208, 239, 241, 241, 231, 158, 46, 18, 86, 198, 238, 241, 240, 224, 145, 41, 11, 53, 146, 212, 230, 224, 184, 91, 25, 5, 20, 63, 123, 157, 143, 90, 37, 10, 2, 7, 18, 34, 47, 40, 23, 10, 3];
-	var clickMask = [0, 0, 1, 4, 8, 10, 13, 14, 14, 11, 9, 5, 2, 1, 0, 0, 1, 6, 11, 20, 27, 34, 38, 36, 30, 22, 13, 7, 3, 1, 1, 6, 13, 26, 43, 60, 73, 79, 76, 64, 47, 30, 17, 8, 2, 4, 12, 26, 50, 79, 107, 129, 136, 130, 112, 86, 57, 32, 15, 6, 8, 21, 45, 81, 123, 160, 185, 195, 188, 168, 132, 90, 53, 26, 10, 12, 31, 65, 112, 164, 204, 225, 231, 229, 212, 175, 125, 76, 38, 15, 16, 41, 81, 138, 193, 229, 238, 240, 240, 233, 204, 151, 94, 48, 20, 18, 44, 90, 151, 206, 236, 240, 241, 241, 240, 216, 164, 103, 53, 23, 17, 43, 89, 148, 204, 235, 240, 241, 241, 239, 215, 162, 101, 53, 22, 14, 37, 77, 131, 187, 225, 238, 240, 239, 230, 198, 146, 89, 45, 18, 11, 28, 60, 104, 154, 195, 217, 224, 220, 202, 164, 116, 69, 34, 13, 7, 19, 41, 73, 112, 146, 170, 180, 174, 153, 120, 81, 46, 23, 9, 3, 10, 23, 43, 69, 94, 112, 121, 115, 98, 75, 48, 27, 12, 5, 1, 5, 11, 22, 36, 50, 61, 67, 63, 53, 39, 25, 13, 6, 2, 0, 1, 5, 9, 15, 23, 27, 30, 28, 24, 17, 10, 6, 2, 0]
+	var clickMask = [0, 0, 1, 4, 8, 10, 13, 14, 14, 11, 9, 5, 2, 1, 0, 0, 1, 6, 11, 20, 27, 34, 38, 36, 30, 22, 13, 7, 3, 1, 1, 6, 13, 26, 43, 60, 73, 79, 76, 64, 47, 30, 17, 8, 2, 4, 12, 26, 50, 79, 107, 129, 136, 130, 112, 86, 57, 32, 15, 6, 8, 21, 45, 81, 123, 160, 185, 195, 188, 168, 132, 90, 53, 26, 10, 12, 31, 65, 112, 164, 204, 225, 231, 229, 212, 175, 125, 76, 38, 15, 16, 41, 81, 138, 193, 229, 238, 240, 240, 233, 204, 151, 94, 48, 20, 18, 44, 90, 151, 206, 236, 240, 241, 241, 240, 216, 164, 103, 53, 23, 17, 43, 89, 148, 204, 235, 240, 241, 241, 239, 215, 162, 101, 53, 22, 14, 37, 77, 131, 187, 225, 238, 240, 239, 230, 198, 146, 89, 45, 18, 11, 28, 60, 104, 154, 195, 217, 224, 220, 202, 164, 116, 69, 34, 13, 7, 19, 41, 73, 112, 146, 170, 180, 174, 153, 120, 81, 46, 23, 9, 3, 10, 23, 43, 69, 94, 112, 121, 115, 98, 75, 48, 27, 12, 5, 1, 5, 11, 22, 36, 50, 61, 67, 63, 53, 39, 25, 13, 6, 2, 0, 1, 5, 9, 15, 23, 27, 30, 28, 24, 17, 10, 6, 2, 0];
 	var clickWidth = Math.sqrt(clickMask.length);
 	
-  applyMask = function (heat) {
+  var applyMask = function (heat) {
     var key, i, j, initialI, initialJ, maskSeg;
 		var newheat = {};
 
@@ -95,7 +93,7 @@
   };
 
   renderHeat = function (heat) {
-    var x, y, splitKey, rgb;
+    var x, y, rgb;
 
 		heat = applyMask(heat);
 		heat = normalizeHeat(heat);
@@ -105,8 +103,8 @@
 		context.fillRect(0, 0, canvasWidth, canvasHeight);
 
     $.each(heat, function (key, value) {
-			if(value != 0) {
-				key = parseInt(key);
+			if(value !== 0) {
+				key = parseInt(key, 10);
 				x = key % 3000;
 				y = Math.floor(key / 3000);
 
@@ -207,12 +205,12 @@
 	var defaults = {
 		endpoint: window.location.protocol + "//" + window.location.hostname + ":3123",
 		trigger: null
-	}
+	};
 
 	$.fn.clickhax = function(settings) {
 
 		canvas = $('#heatmapOverlay');
-		if(canvas.length == 0) {
+		if(canvas.length === 0) {
 			$("body").append("<canvas id='heatmapOverlay' style='position: absolute; top: 0; left: 0; right: 0, bottom: 0; display: none;'>This requires canvas support.</canvas>");
 			canvas = $('#heatmapOverlay');
 			canvas.click(function() { canvas.fadeOut('fast'); });
@@ -246,9 +244,9 @@
 			if(options.trigger) {
 				$(options.trigger).click(function() {
 					var $e = $(tracker);
-					var off = $e.offset()
-					var w = $e.width() + parseInt($e.css("padding-left")) + parseInt($e.css("padding-right")) + parseInt($e.css("borderLeftWidth")) + parseInt($e.css("borderRightWidth"));
-					var h = $e.height() + parseInt($e.css("padding-top")) + parseInt($e.css("padding-bottom")) + parseInt($e.css("borderTopWidth")) + parseInt($e.css("borderBottomWidth"));
+					var off = $e.offset();
+					var w = $e.width() + parseInt($e.css("padding-left"), 10) + parseInt($e.css("padding-right"), 10) + parseInt($e.css("borderLeftWidth"), 10) + parseInt($e.css("borderRightWidth"), 10);
+					var h = $e.height() + parseInt($e.css("padding-top"), 10) + parseInt($e.css("padding-bottom"), 10) + parseInt($e.css("borderTopWidth"), 10) + parseInt($e.css("borderBottomWidth"), 10);
 					canvas.attr({
 						width: w,
 						height: h
